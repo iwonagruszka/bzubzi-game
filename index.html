@@ -660,25 +660,21 @@ function renderPlay(){
       ctx.fillText(e.emoji, e.x + e.w/2, e.y + e.h/2);
     });
 
-    // Lola waits at the finish, sliding in as you get close
-    const remaining = FINISH_DISTANCE - g.distance;
-    if(remaining < 900){
-      const lolaX = CANVAS_W - 40 + (remaining/900)*260;
-      if(lolaImg.complete && lolaImg.naturalWidth > 0){
-        const lh = 62;
-        const lw = lh * (lolaImg.naturalWidth / lolaImg.naturalHeight);
-        ctx.drawImage(lolaImg, lolaX - lw/2, GROUND_Y - lh + 6, lw, lh);
-      } else {
-        ctx.font = '40px sans-serif';
-        ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText('🐮', lolaX, GROUND_Y - 8);
-      }
-      if(remaining < 500){
-        ctx.font = 'bold 14px Baloo 2, sans-serif';
-        ctx.fillStyle = '#4E5E80';
-        ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText('Lola', lolaX, GROUND_Y + 22);
-      }
+   // Lola waits at the finish, sliding in as you get close
+const remaining = FINISH_DISTANCE - g.distance;
+if (remaining < 900) {
+  const lolaX = CANVAS_W - 40 + (remaining / 900) * 260;
+
+  if (lolaImg.complete && lolaImg.naturalWidth > 0) {
+    const lh = 62;
+    const lw = lh * (lolaImg.naturalWidth / lolaImg.naturalHeight);
+    ctx.drawImage(lolaImg, lolaX - lw / 2, GROUND_Y - lh + 6, lw, lh);
+  } else {
+    ctx.font = '40px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🐮', lolaX, GROUND_Y - 8);
+  }
     }
 
     // particles
