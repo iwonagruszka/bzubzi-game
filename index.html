@@ -669,12 +669,7 @@ if (remaining < 900) {
     const lh = 62;
     const lw = lh * (lolaImg.naturalWidth / lolaImg.naturalHeight);
     ctx.drawImage(lolaImg, lolaX - lw / 2, GROUND_Y - lh + 6, lw, lh);
-  } else {
-    ctx.font = '40px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('🐮', lolaX, GROUND_Y - 8);
-  }
+  } 
     }
 
     // particles
