@@ -199,6 +199,7 @@ const lolaImg   = new Image(); if(LOLA_SRC)   lolaImg.src   = LOLA_SRC;
 const state = {
   screen: 'start',
   nick: '',
+  firstName: '',
   avatar: CYBORG_KEY,
   email: '',
   score: 0,
@@ -345,6 +346,8 @@ function renderAvatar(){
         <div class="avatar-opt img-opt ${state.avatar===CYBORG_KEY?'selected':''}" data-a="${CYBORG_KEY}" title="Bzubzi">${BZUBZI_SRC ? `<img src="${BZUBZI_SRC}" alt="Bzubzi">` : BZUBZI_EMOJI}</div>
         ${AVATARS.map(a=>`<div class="avatar-opt ${a===state.avatar?'selected':''}" data-a="${a}">${a}</div>`).join('')}
       </div>
+      <label>First name</label>
+      <input type="text" id="firstNameInput" maxlength="40" placeholder="e.g. Emma" value="${state.firstName}">
       <label>Grown-up's e-mail address</label>
       <input type="email" id="emailInput" placeholder="grownup@email.com" value="${state.email}">
       <p class="small-note">Ask a grown-up! We use this e-mail to save your score.</p>
@@ -371,6 +374,7 @@ function renderAvatar(){
     </div>`;
 
   const nickInput = document.getElementById('nickInput');
+  const firstNameInput = document.getElementById('firstNameInput');
   const emailInput = document.getElementById('emailInput');
   const startBtn = document.getElementById('startGame');
   const cPrivacy = document.getElementById('consentPrivacy');
@@ -378,10 +382,12 @@ function renderAvatar(){
 
   function validate(){
     const okNick = nickInput.value.trim().length >= 2;
+    const okFirstName = firstNameInput.value.trim().length >= 2;
     const okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
-    startBtn.disabled = !(okNick && okEmail && cPrivacy.checked);
+    startBtn.disabled = !(okNick && okFirstName && okEmail && cPrivacy.checked);
   }
   nickInput.oninput = validate;
+  firstNameInput.oninput = validate;
   emailInput.oninput = validate;
   cPrivacy.onchange = validate;
   cMarketing.onchange = validate;
@@ -398,6 +404,7 @@ function renderAvatar(){
   document.getElementById('backStart').onclick = ()=>{ state.screen='start'; render(); };
   document.getElementById('startGame').onclick = ()=>{
     state.nick = nickInput.value.trim();
+    state.firstName = firstNameInput.value.trim();
     state.email = emailInput.value.trim();
     state.consentPrivacy = cPrivacy.checked;
     state.consentMarketing = cMarketing.checked;
@@ -419,8 +426,8 @@ function renderAvatar(){
    Requires CONFIG.MAILCHIMP_ACTION to be set (see top of file).
    Recommended: enable DOUBLE OPT-IN in your Mailchimp audience.
    ---------------------------------------------------------
-   Merge fields to create in Mailchimp (Audience > Settings >
-   Audience fields and *|MERGE|* tags):
+   Merge / custom fields to create in your provider:
+     FNAME     (text)  - first name (Flodesk: map to "First name")
      NICK      (text)  - player nickname
      CONSENTTS (text)  - consent timestamp, ISO 8601
      CONSENTTX (text)  - exact consent wording shown
@@ -439,6 +446,7 @@ function subscribeToMailchimp(){
 
   const params = new URLSearchParams({
     EMAIL: state.email,
+    FNAME: state.firstName,   // first name -> maps to Flodesk "First name" / Mailchimp FNAME
     NICK: state.nick,
     CONSENTTS: state.consentTimestamp,
     CONSENTTX: state.consentTextShown.slice(0, 240),
@@ -729,6 +737,7 @@ function renderResult(){
         <div class="cta-head">${ctaFor(state.score, won).head}</div>
         <p class="cta-body">${ctaFor(state.score, won).body}</p>
         <a class="btn cta-btn" href="${CONFIG.ASSESSMENT_URL}" target="_blank" rel="noopener" id="ctaRoadmap">${ctaFor(state.score, won).btn}</a>
+        <div class="cta-note">Two short assessments · free · no payment required</div>
       </div>
       <div class="btn-row" style="width:100%;">
         <button class="btn secondary" id="playAgain">Play again</button>
